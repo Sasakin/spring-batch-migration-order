@@ -1,0 +1,97 @@
+server:
+  port: ${APPLICATION_SERVER_PORT:25010}
+  forward-headers-strategy: framework
+
+spring:
+  application:
+    name: ${APPLICATION_NAME:spring-batch-migration-order}
+    version: ${APPLICATION_VERSION:0.0.1-SNAPSHOT}
+  datasource:
+    migration:
+      url: ${DB_URL:jdbc:postgresql://localhost:5432/order_migration}
+      schema: ${DB_SCHEMA:order_migration}
+      username: ${DB_USER:sa}
+      password: ${DB_PASS:12033021}
+      hikari:
+        connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:30000}
+        minimumIdle: ${HIKARI_MINIMUM_IDLE:10}
+        maximumPoolSize: ${HIKARI_MAXIMUM_POOL_SIZE:250}
+        maxLifetime: ${HIKARI_MAX_LIFE_TIME:180000}
+    orders:
+      url: ${BLOCK_DB_URL:jdbc:postgresql://localhost:5432/orders}
+      schema: ${BLOCK_DB_SCHEMA:orders}
+      username: ${BLOCK_DB_USER:sa}
+      password: ${BLOCK_DB_PASS:12033021}
+      hikari:
+        connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:30000}
+        minimumIdle: ${HIKARI_MINIMUM_IDLE:10}
+        maximumPoolSize: ${HIKARI_MAXIMUM_POOL_SIZE:250}
+        maxLifetime: ${HIKARI_MAX_LIFE_TIME:180000}
+    storage:
+      url: ${STORAGE_DB_URL:jdbc:postgresql://localhost:5432/storage}
+      schema: ${STORAGE_DB_SCHEMA:storage}
+      username: ${STORAGE_DB_USER:sa}
+      password: ${STORAGE_DB_PASS:12033021}
+      hikari:
+        connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:30000}
+        minimumIdle: ${HIKARI_MINIMUM_IDLE:10}
+        maximumPoolSize: ${HIKARI_MAXIMUM_POOL_SIZE:250}
+        maxLifetime: ${HIKARI_MAX_LIFE_TIME:180000}
+  jpa:
+    show-sql: ${HIBERNATE_SHOW_SQL:false}
+    properties:
+      hibernate:
+        proc.param_null_passing: true
+    hibernate:
+      ddl-auto: none
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
+management:
+  endpoints:
+    enabled-by-default: false
+    web.exposure.include: health,prometheus
+  endpoint:
+    health.enabled: true
+    prometheus.enabled: true
+
+logging:
+  config: ./src/main/resources/log4j2-spring.xml
+  level:
+    root: info
+    org.charot.migration: ${LOG_LEVEL:INFO}
+
+application:
+  security:
+    user: "${SWAGGER_USER:user}"
+    password: "${SWAGGER_PASSWORD:password}"
+  batch:
+    chunk_size: ${CHUNK_SIZE:500}
+  jdbc:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    zTest:
+      user: "${TEST_DB_USER:tro}"
+      pass: "${TEST_DB_PASS:bGHFD3214}"
+      url: "${TEST_URL:jdbc:sqlserver://localhost:1433;database=test}"
+      integratedSecurity: "${TEST_INTEGRATED_SECURITY:false}"
+      trustServerCertificate: "${TEST_TRUST_SERVER_CERTIFICATE:false}"
+      encrypt: "${TEST_ENCRYPT:false}"
+      authenticationScheme: "${TEST_AUTHENTICATION_SCHEME:JavaKerberos}"
+      trustStore: "${TEST_TRUST_STORE:C:\\Program Files\\Amazon Corretto\\jdk11.0.15_9\\lib\\security\\cacert}"
+      trustStorePassword: "${TEST_TRUST_STORE_PASSWORD:123321}"
+    h8:
+      dialect: org.hibernate.dialect.SQLServer2016Dialect
+      hbm2ddl: none
+
+thread-pool:
+    size: "${MIGRATION_THREAD_POOL_SIZE:5}"
+
+springdoc:
+  show-login-endpoint: true
+  version: '@springdoc.version@'
+  swagger-ui:
+    path: swagger-ui
+    use-root-path: true

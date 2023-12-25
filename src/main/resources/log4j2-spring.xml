@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" monitorInterval="10" >
+    <Properties>
+        <Property name="appName">{{ .Chart.Name }}</Property>
+        <Property name="appType">JAVA</Property>
+        <Property name="encProvider"/>
+        <Property name="projectCode">CHAROT</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+        </Root>
+        <Logger name="org.charot.migration" level="debug"/>
+        <Logger name="org.apache.kafka" level="info"/>
+    </Loggers>
+</Configuration>
